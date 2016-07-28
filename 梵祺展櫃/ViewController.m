@@ -17,6 +17,7 @@
 
 @property(nonatomic,strong)NSMutableArray *driverList;
 
+@property(nonatomic,strong)NSMutableArray *nwDeviceList;
 
 @property(nonatomic,strong)UIPickerView *pickerView;//码盘
 
@@ -40,6 +41,9 @@
 @property(nonatomic,strong)UIView *doorStopstate;
 @property(nonatomic,strong)mtButton *btnDoorClose;
 @property(nonatomic,strong)UIView *doorClosestate;
+@property(nonatomic,strong)UISwitch *lockSwitch;
+
+@property(nonatomic,strong)UILabel *lockLabel;
 
 
 
@@ -60,7 +64,7 @@
     [self initData];
     [self initNav];
     [self initView];
-    
+    [self setUserInterface:NO];//设置启动后界面不能交互 解锁后 可以交互
     
     //初始化默认选择
     [self setHostAndPort:0];
@@ -78,7 +82,7 @@
 {
     
     driverListModel *model=self.driverList[index];
-    if(model.driverIP.length<10)
+    if(model.driverIP.length<5)
     {
         self.socketHost=@"";
         self.socketPort=0;
@@ -103,6 +107,7 @@
 {
     driverListModel *model=[[driverListModel alloc]init];
     self.driverList=[model getDriverListArray];
+    [self.pickerView reloadAllComponents];
     
 }
 
@@ -171,7 +176,37 @@
     self.pickerView.showsSelectionIndicator=YES;//设置显示选中框
     //self.pickerView.backgroundColor=btnColor;//设置pickerview的背景颜色
     
+    CGFloat topViewMarginW=15;
+    CGFloat lockSwitchW=50;
+    CGFloat pickerW=110;
+    CGFloat noLabelW=90;
+    
+    //锁子
+    
+    CGFloat noLabelH=60;
 
+    CGFloat noLabelY=(topViewH-noLabelH)/2-5;
+    CGFloat lockSwitchH=30;
+    CGFloat lockSwitchX=(SCREENWIDTH-(topViewMarginW*2+lockSwitchW+pickerW+noLabelW))/2;
+    CGFloat lockSwitchY=noLabelY;
+    CGFloat noLabelX=lockSwitchW+lockSwitchX+topViewMarginW;
+    
+    CGFloat pickerH=120;
+    CGFloat pickerX=noLabelX+noLabelW+topViewMarginW;
+    CGFloat pickerY=(topViewH-pickerH)/2-5;
+    
+    self.lockSwitch=[[UISwitch alloc]initWithFrame:CGRectMake(lockSwitchX, lockSwitchY+2, lockSwitchW, lockSwitchH)];
+    self.lockSwitch.transform=CGAffineTransformMakeScale(1.1, 1.1);
+    [self.lockSwitch addTarget:self action:@selector(lockSwitch_click) forControlEvents:UIControlEventValueChanged];
+    
+    
+    //下面的提示
+    self.lockLabel=[[UILabel alloc]initWithFrame:CGRectMake(lockSwitchX-2, lockSwitchH+lockSwitchY+5, self.lockSwitch.frame.size.width+2, 20)];
+    self.lockLabel.text=@"locked";
+    self.lockLabel.textAlignment=NSTextAlignmentCenter;
+    self.lockLabel.font=[UIFont systemFontOfSize:16 weight:5];
+    [topView addSubview:self.lockLabel];
+    [topView addSubview:self.lockSwitch];
     
  
     
@@ -179,22 +214,18 @@
     noLabel.text=@"編  號\r\nNumber";
     noLabel.textAlignment=NSTextAlignmentCenter;
     [noLabel setNumberOfLines:3];
-    noLabel.font=[UIFont systemFontOfSize:25 weight:0];
+    noLabel.font=[UIFont systemFontOfSize:24 weight:0];
     
-    CGFloat noLabelW=120;
-    CGFloat noLabelH=60;
-    CGFloat noLabelX=(SCREENWIDTH-noLabelW-150-10)/2;
-    CGFloat noLabelY=(topViewH-noLabelH)/2;
+  
+ 
 //    if(getPickerViewHeight>60)
 //    {
 //        noLabelY=-logoY+(getPickerViewHeight-noLabelH)/2;
 //    }
     noLabel.frame=CGRectMake(noLabelX, noLabelY, noLabelW, noLabelH);
     
-    CGFloat pickerW=150;
-    CGFloat pickerH=90;
-    CGFloat pickerX=noLabelX+noLabelW+10;
-    CGFloat pickerY=(topViewH-pickerH)/2;
+   
+ 
     self.pickerView.frame=CGRectMake(pickerX, pickerY, pickerW, pickerH);
     CGFloat getPickerViewHeight=self.pickerView.frame.size.height;
     NSLog(@"pickerViewHeight is :%lf",getPickerViewHeight);
@@ -398,13 +429,28 @@
 //返回所要显示的行数
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    return 100;
+    //有多少设备返回多少数
+    NSMutableArray *tmp=[NSMutableArray array];
+    int i=0;
+    for (driverListModel *model in self.driverList) {
+        i++;
+        if(model.driverIP.length>5)//将有数据的数据模型放在一个新的数组中
+        {
+            
+            [tmp addObject:[NSString stringWithFormat:@"%d",i]];
+        }
+    }
+    self.nwDeviceList=tmp;
+    return self.nwDeviceList.count;
 }
 //返回当前行的内容
 -(NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
     
-    return [NSString stringWithFormat:@"%ld",(long)row+1];
+    return self.nwDeviceList[row];
+    
+    
+
 }
 /**
  *  当用户选择后调用这个函数
@@ -414,8 +460,10 @@
     
     //进行socket连接
     //获取ip以及端口
-  
-    [self setHostAndPort:row];
+    NSInteger myRow= [self.nwDeviceList[row] integerValue];
+    
+    NSLog(@"我的myRowID是 %d",myRow);
+    [self setHostAndPort:myRow-1];
     
     
     //断开上次连接
@@ -579,5 +627,35 @@
         self.socketState.backgroundColor=[UIColor grayColor];
     }];
     [self socketConnectHost];
+}
+-(void)lockSwitch_click
+{
+    if(self.lockSwitch.on)
+    {
+        self.lockLabel.text=@"Unlock";
+        [self setUserInterface:YES];
+    }
+    else
+    {
+        
+        self.lockLabel.text=@"Locked";
+        [self setUserInterface:NO];
+    }
+}
+/**
+ *  设置界面是否可以交互的方法
+ *
+ *  @param isYes <#isYes description#>
+ */
+-(void)setUserInterface:(BOOL)isYes
+{
+    self.btnLampA.userInteractionEnabled=isYes;
+    self.btnLampB.userInteractionEnabled=isYes;
+    self.btnLampClose.userInteractionEnabled=isYes;
+    self.btnDoorOpen.userInteractionEnabled=isYes;
+    self.btnDoorStop.userInteractionEnabled=isYes;
+    self.btnDoorClose.userInteractionEnabled=isYes;
+    self.pickerView.userInteractionEnabled=isYes;
+
 }
 @end
