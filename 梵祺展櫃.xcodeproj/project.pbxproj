@@ -21,6 +21,8 @@
 		F0A4ECCA1CCD27710016A696 /* setPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A4ECC91CCD27710016A696 /* setPasswordViewController.m */; };
 		F0A4ECCD1CCE0E810016A696 /* setDriverInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A4ECCC1CCE0E810016A696 /* setDriverInfoViewController.m */; };
 		F0C0937B1D1A6F18007014D8 /* XHToast.m in Sources */ = {isa = PBXBuildFile; fileRef = F0C0937A1D1A6F18007014D8 /* XHToast.m */; };
+		F0CD41911D49A13100BDEB98 /* JXMovableCellTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = F0CD41901D49A13100BDEB98 /* JXMovableCellTableView.m */; };
+		F0CD41941D4A3DAB00BDEB98 /* MTSocketController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0CD41931D4A3DAB00BDEB98 /* MTSocketController.m */; };
 		F0DCC5641CC4CA3F00A58DEB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F0DCC5631CC4CA3F00A58DEB /* main.m */; };
 		F0DCC5671CC4CA3F00A58DEB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0DCC5661CC4CA3F00A58DEB /* AppDelegate.m */; };
 		F0DCC56A1CC4CA3F00A58DEB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0DCC5691CC4CA3F00A58DEB /* ViewController.m */; };
@@ -76,6 +78,10 @@
 		F0A4ECCC1CCE0E810016A696 /* setDriverInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = setDriverInfoViewController.m; sourceTree = "<group>"; };
 		F0C093791D1A6F18007014D8 /* XHToast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XHToast.h; sourceTree = "<group>"; };
 		F0C0937A1D1A6F18007014D8 /* XHToast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XHToast.m; sourceTree = "<group>"; };
+		F0CD418F1D49A13100BDEB98 /* JXMovableCellTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JXMovableCellTableView.h; sourceTree = "<group>"; };
+		F0CD41901D49A13100BDEB98 /* JXMovableCellTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JXMovableCellTableView.m; sourceTree = "<group>"; };
+		F0CD41921D4A3DAB00BDEB98 /* MTSocketController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTSocketController.h; sourceTree = "<group>"; };
+		F0CD41931D4A3DAB00BDEB98 /* MTSocketController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTSocketController.m; sourceTree = "<group>"; };
 		F0DCC55F1CC4CA3F00A58DEB /* 梵祺展櫃.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "梵祺展櫃.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0DCC5631CC4CA3F00A58DEB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F0DCC5651CC4CA3F00A58DEB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -155,6 +161,8 @@
 				F0948E131D0BB54000B1AED0 /* AsyncSocket.m */,
 				F0948E141D0BB54000B1AED0 /* AsyncUdpSocket.h */,
 				F0948E151D0BB54000B1AED0 /* AsyncUdpSocket.m */,
+				F0CD41921D4A3DAB00BDEB98 /* MTSocketController.h */,
+				F0CD41931D4A3DAB00BDEB98 /* MTSocketController.m */,
 			);
 			path = socket;
 			sourceTree = "<group>";
@@ -277,6 +285,8 @@
 		F0DCC5981CC4D52D00A58DEB /* view */ = {
 			isa = PBXGroup;
 			children = (
+				F0CD418F1D49A13100BDEB98 /* JXMovableCellTableView.h */,
+				F0CD41901D49A13100BDEB98 /* JXMovableCellTableView.m */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -458,6 +468,8 @@
 				F0948E171D0BB54000B1AED0 /* AsyncUdpSocket.m in Sources */,
 				F0A4ECB91CC9FCA10016A696 /* loginViewController.m in Sources */,
 				F0E88CEB1D19592800D0CD67 /* smartAddDeviceViewController.m in Sources */,
+				F0CD41911D49A13100BDEB98 /* JXMovableCellTableView.m in Sources */,
+				F0CD41941D4A3DAB00BDEB98 /* MTSocketController.m in Sources */,
 				F0A4EC501CC61BD60016A696 /* driverListModel.m in Sources */,
 				F0A4ECC11CCB1EDF0016A696 /* setTableViewController.m in Sources */,
 				F0DCC5671CC4CA3F00A58DEB /* AppDelegate.m in Sources */,

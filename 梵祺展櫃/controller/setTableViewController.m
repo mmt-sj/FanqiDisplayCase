@@ -13,6 +13,7 @@
 
 @interface setTableViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic,strong)NSMutableArray *driverListArray;
+@property(nonatomic,strong)driverListModel *deviceModel;
 @end
 
 @implementation setTableViewController
@@ -37,6 +38,7 @@
 -(void)initData
 {
     driverListModel *model=[[driverListModel alloc]init];
+    self.deviceModel=model;
     self.driverListArray=[model getDriverListArray];
 }
 //修改密码点击事件
@@ -61,12 +63,76 @@
     // Pass the selected object to the new view controller.
 }
 */
+/**
+ *  设置tableview可编辑
+ *
+ *  @param tableView <#tableView description#>
+ *  @param indexPath <#indexPath description#>
+ *
+ *  @return <#return value description#>
+ */
+-(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+
+-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+     [tableView setEditing:YES animated:YES];
+    return UITableViewCellEditingStyleDelete;
+}
+//修改编辑按钮文字
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return @"删除";
+}
+//实现Cell可上下移动，调换位置，需要实现UiTableViewDelegate中如下方法：
+
+//先设置Cell可移动
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+-(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath
+{
+    //发生移动所要执行的动作
+    [self.deviceModel moveDeviceRowAtIndexPath:sourceIndexPath.row toIndexPath:destinationIndexPath.row];
+    self.driverListArray=[self.deviceModel getDriverListArray];
+    [self.tableView reloadData];
+    [tableView setEditing:NO animated:YES];
+}//进入编辑模式，按下出现的编辑按钮后
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView setEditing:NO animated:YES];
+    if (editingStyle==UITableViewCellEditingStyleDelete) {
+        [tableView setEditing:NO animated:YES];
+        //在这里进行删除的操作
+        [self.deviceModel removeDriver:indexPath.row];
+        self.driverListArray= [self.deviceModel getDriverListArray];//重新获取数据
+        
+        [self.tableView reloadData];
+    
+        #warning 删除操作//删除将要删除的删除
+    }
+}
+
+//设置进入编辑状态时，Cell不会缩进
+- (BOOL)tableView: (UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return 100;
 }
+//在下面方法中添加 cell.showsReorderControl =YES;
+//使Cell显示移动按钮
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     NSString *identifier;
     UITableViewCell *cell=[self.tableView dequeueReusableCellWithIdentifier:identifier];
     if(!cell)
@@ -90,11 +156,17 @@
         number.text=[NSString stringWithFormat:@"%ld",(long)indexPath.row+1];
         [cell.imageView addSubview:number];
         
+        //设置cell显示移动按钮
+        cell.showsReorderControl=YES;
         //箭头显示
         cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
         
     }
     return cell;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60;
 }
 -(UIView *)createHeaderView
 {
@@ -120,16 +192,20 @@
     setInfo.cellRow=indexPath.row;
     [self.navigationController pushViewController:setInfo animated:YES];
 }
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 55;
-}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [self initData];
     [self.tableView reloadData];
     driverListModel *sa=self.driverListArray[3];
     NSLog(@"sasasasa%@",sa.driverName);
+    
+}
+/**
+ *  添加长按手势
+ */
+-(void)addGesture
+{
     
 }
 @end

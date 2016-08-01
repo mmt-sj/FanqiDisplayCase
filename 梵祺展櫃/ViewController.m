@@ -56,6 +56,7 @@
     int LAMPASTATE;
     int LAMPBSTATE;
     int DOORSTATE;
+    
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -70,6 +71,10 @@
     [self setHostAndPort:0];
     
     [self socketConnectHost];//连接服务端
+    //心跳检测 发送假数据  获取设备状态
+    [self.asyncSocket writeData:[self sendData:9 State:0] withTimeout:-1 tag:1];
+    
+
 
 }
 /**
@@ -281,8 +286,29 @@
         NSLog(@"灯A%@",self.socketHost);
         //操作
         //[self socketConnectHost];//连接 操作
+        //循环10次如果10次还不能打开或关闭则终止
         NSData *sendData=[self sendData:LAMPA State:LAMPOPEN];
-        [self.asyncSocket writeData:sendData withTimeout:-1 tag:1];
+        NSData *sendData2=[self sendData:LAMPB State:LAMPCLOSE];
+        /**
+         *  采用FOR循环解决丢包问题
+         */
+        for (int i=0; i<10; i++) {
+               [self.asyncSocket writeData:sendData2 withTimeout:-1 tag:1];//关闭灯B
+            if(LAMPBSTATE==LAMPCLOSE)
+            {
+                break;
+            }
+        }
+        
+        for (int i=0; i<10; i++) {
+                [self.asyncSocket writeData:sendData withTimeout:-1 tag:1];
+            if(LAMPASTATE==LAMPCLOSE)
+            {
+                break;
+            }
+        }
+     
+  
 
      
         
@@ -301,9 +327,24 @@
         NSLog(@"關燈");
         
         //关灯操作
-        [self.asyncSocket writeData:[self sendData:LAMPA State:LAMPCLOSE] withTimeout:1 tag:1];
+        for (int i=0; i<10; i++) {
+           [self.asyncSocket writeData:[self sendData:LAMPB State:LAMPCLOSE] withTimeout:-1 tag:1];//关闭灯B
+            if(LAMPBSTATE==0)
+            {
+                break;
+            }
+        }
         
-        [self.asyncSocket writeData:[self sendData:LAMPB State:LAMPCLOSE] withTimeout:-1 tag:1];
+        for (int i=0; i<10; i++) {
+            [self.asyncSocket writeData:[self sendData:LAMPA State:LAMPCLOSE] withTimeout:1 tag:1];
+            if(LAMPASTATE==0)
+            {
+                break;
+            }
+        }
+        
+        
+        
 
     }];
     self.btnLampClose=buttonOff;
@@ -318,7 +359,27 @@
         
         NSLog(@"灯B");
         NSData *sendData=[self sendData:LAMPB State:LAMPOPEN];
-        [self.asyncSocket writeData:sendData withTimeout:1 tag:1];
+        NSData *$sendData2=[self sendData:LAMPA State:LAMPCLOSE];
+       
+       
+        for (int i=0; i<10; i++) {
+            [self.asyncSocket writeData:$sendData2 withTimeout:1 tag:1];//关闭灯A
+            if(LAMPASTATE==LAMPCLOSE)
+            {
+                break;
+            }
+            NSLog(@"循环次数%d",i);
+        }
+        
+        for (int i=0; i<10; i++) {
+            [self.asyncSocket writeData:sendData withTimeout:1 tag:1];
+            if(LAMPBSTATE==LAMPOPEN)
+            {
+                break;
+            }
+        }
+
+        
     }];
     self.btnLampB=buttonB;
     [centerView addSubview:self.btnLampB];
@@ -343,7 +404,14 @@
         NSLog(@"開門");
         
         NSData *sendData=[self sendData:DOOR State:DOOROPEN];
-        [self.asyncSocket writeData:sendData withTimeout:-1 tag:1];
+        
+        for (int i=0; i<10; i++) {
+            [self.asyncSocket writeData:sendData withTimeout:-1 tag:1];
+            if(DOORSTATE==DOOROPEN)
+            {
+                break;
+            }
+        }
 
     }];
     self.btnDoorOpen=doorOn;
@@ -356,7 +424,14 @@
     mtButton *doorStop=[mtButton touchUpOutsideCancelButtonWithType:UIButtonTypeRoundedRect frame:doorStopFrame title:doorStopTitle titleColor:[UIColor whiteColor] backgroundColor:btnColor backgroundImage:nil andBlock:^{
         NSLog(@"停止");
         NSData *sendData=[self sendData:DOOR State:DOORSTOP];
-        [self.asyncSocket writeData:sendData withTimeout:1 tag:1];
+        for (int i=0; i<10; i++) {
+               [self.asyncSocket writeData:sendData withTimeout:1 tag:1];
+            if(DOORSTATE==DOORSTOP)
+            {
+                break;
+            }
+                
+        }
 
     }];
     self.btnDoorStop=doorStop;
@@ -371,7 +446,14 @@
         
         
         NSData *sendData=[self sendData:DOOR State:DOORCLOSE];
-        [self.asyncSocket writeData:sendData withTimeout:1 tag:1];
+        for (int i=0; i<10; i++) {
+              [self.asyncSocket writeData:sendData withTimeout:1 tag:1];
+            if(DOORSTATE==DOORCLOSE)
+            {
+                break;
+            }
+        }
+      
 
     }];
     self.btnDoorClose=doorOff;
@@ -462,7 +544,7 @@
     //获取ip以及端口
     NSInteger myRow= [self.nwDeviceList[row] integerValue];
     
-    NSLog(@"我的myRowID是 %d",myRow);
+    NSLog(@"我的myRowID是 %ld",(long)myRow);
     [self setHostAndPort:myRow-1];
     
     
@@ -476,6 +558,8 @@
     //进行本次连接
     [self socketConnectHost];
     NSLog(@"ip is : %@,port is %d   "  ,self.socketHost,self.socketPort);
+    //心跳检测 发送假数据  获取设备状态
+    [self.asyncSocket writeData:[self sendData:9 State:0] withTimeout:-1 tag:1];
 }
 /**
  *  <#Description#>
@@ -505,7 +589,8 @@
         NSError *error=nil;
         if([self.asyncSocket connectToHost:self.socketHost onPort:self.socketPort error:&error])
         {
-            NSLog(@"error is %@",error);
+            NSLog(@"error is %@",error);//连接成功
+        
         }
         else{
            // NSLog(@"连接失败");

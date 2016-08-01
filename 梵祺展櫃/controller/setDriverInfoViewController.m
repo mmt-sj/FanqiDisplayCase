@@ -54,7 +54,7 @@
     driverListModel *model=[[driverListModel alloc]init];
     self.driverListArray=[model getDriverListArray];
     driverListModel *device=self.driverListArray[self.cellRow];
-     self.numberTextField.text=[NSString stringWithFormat:@"%d",self.cellRow+1];
+     self.numberTextField.text=[NSString stringWithFormat:@"%ld",self.cellRow+1];
     //如果名称和ip为空 则默认此序号没有设备
     if([device.driverName isEqualToString:@""]||device.driverIP.length<5)
     {

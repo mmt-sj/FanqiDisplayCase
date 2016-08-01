@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x68b5;&#x797a;&#x5c55;&#x6ac3;/controller/setTableViewController.m"
-            timestampString = "488200876.738588"
+            timestampString = "491383068.559441"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
             landmarkName = "-setPasswordClick"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x68b5;&#x797a;&#x5c55;&#x6ac3;/ViewController.m"
-            timestampString = "491320361.738276"
+            timestampString = "491395622.656533"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "324"
-            endingLineNumber = "324"
+            startingLineNumber = "385"
+            endingLineNumber = "385"
             landmarkName = "-initView"
             landmarkType = "5">
          </BreakpointContent>
@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x68b5;&#x797a;&#x5c55;&#x6ac3;/ViewController.m"
-            timestampString = "491321041.162479"
+            timestampString = "491395622.656533"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "531"
-            endingLineNumber = "531"
+            startingLineNumber = "616"
+            endingLineNumber = "616"
             landmarkName = "@implementation ViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -136,11 +136,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x68b5;&#x797a;&#x5c55;&#x6ac3;/ViewController.m"
-            timestampString = "491321041.162479"
+            timestampString = "491395622.656533"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "504"
-            endingLineNumber = "504"
+            startingLineNumber = "588"
+            endingLineNumber = "588"
             landmarkName = "-socketConnectHost"
             landmarkType = "5">
          </BreakpointContent>
@@ -184,12 +184,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x68b5;&#x797a;&#x5c55;&#x6ac3;/ViewController.m"
-            timestampString = "491321041.162479"
+            timestampString = "491395622.656533"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "463"
-            endingLineNumber = "463"
+            startingLineNumber = "545"
+            endingLineNumber = "545"
             landmarkName = "-pickerView:didSelectRow:inComponent:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "&#x68b5;&#x797a;&#x5c55;&#x6ac3;/AppDelegate.m"
+            timestampString = "491411687.701889"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "127"
+            endingLineNumber = "127"
+            landmarkName = "-setDeviceDoorStop"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

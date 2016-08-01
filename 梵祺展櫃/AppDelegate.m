@@ -9,12 +9,19 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import "mtFileOperations.h"
+#import <AVFoundation/AVFoundation.h>
+#import "driverListModel.h"
+#import "MTSocketController.h"
+#import "deviceString.h"
 @interface AppDelegate ()
 
 @end
 
 @implementation AppDelegate
-
+{
+    NSTimer *_timer;
+    NSInteger _count;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
@@ -37,7 +44,17 @@
                                   }];//设置nav标题的颜色
     
     self.window.rootViewController=nav;//设置根视图为nav
-   
+    
+    
+    
+        //可后台运行的设置
+    NSError *setCategoryErr=nil;
+    NSError *activetionErr=nil;
+    [[AVAudioSession sharedInstance]setCategory:AVAudioSessionCategoryPlayback error:&setCategoryErr];
+    [[AVAudioSession sharedInstance]setActive:YES error:&activetionErr];
+    //添加定时器
+    _timer=[NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(myTimer) userInfo:nil repeats:YES];
+    
     [self.window makeKeyAndVisible]; //设置显示
     
     return YES;
@@ -51,6 +68,36 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    //永久后台
+    UIApplication *app=[UIApplication sharedApplication];
+    __block UIBackgroundTaskIdentifier bgTask;
+    bgTask=[app beginBackgroundTaskWithExpirationHandler:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if(bgTask!=UIBackgroundTaskInvalid)
+            {
+                bgTask=UIBackgroundTaskInvalid;
+            }
+        });
+    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if(bgTask!=UIBackgroundTaskInvalid)
+        {
+            bgTask=UIBackgroundTaskInvalid;
+        }
+    });
+    //开启定时器
+    [_timer setFireDate:[NSDate distantPast]];
+    _count=0;
+}
+-(void)myTimer
+{
+    _count++;
+    NSLog(@"正在后台运行%ld",(long)_count);
+    if(_count>=40)
+    {
+        //发送停止命令
+        [self setDeviceDoorStop];
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -59,10 +106,31 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    //回来后
+    [_timer setFireDate:[NSDate distantFuture]];//
+    
+    NSLog(@"后台运行结束%ld",_count);
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
-
+/**
+ *  2016年07月28日23:03:39
+ *  后台运行一段时间后 所有设备的门设置到处于停的状态
+ */
+-(void)setDeviceDoorStop
+{
+    MTSocketController *mtScoket=[[MTSocketController alloc]init];
+     driverListModel *model=[[driverListModel alloc]init];
+    NSMutableArray *muArray=[model getDriverListArray];
+    for (driverListModel *tempModel in muArray) {
+        if(tempModel.driverIP.length>5){
+            [mtScoket cutOffSocket];
+            [mtScoket connectSocketIP:[tempModel.driverIP substringToIndex:tempModel.driverIP.length-5] port:[[tempModel.driverIP substringFromIndex:tempModel.driverIP.length-4] intValue]];
+            [mtScoket sendData:DOOR State:(DOORSTOP)];
+            NSLog(@"stop门的指令已经发送");
+        }
+    }
+}
 @end

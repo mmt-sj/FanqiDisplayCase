@@ -49,7 +49,7 @@
 /**
  *  添加设备
  *
- *  @param driverID   设备id ﹣1代表自動選擇序列
+ *  @param driverID   设备id ﹣1代表自動選擇序列(编号)
  *  @param driverName 设备名称
  *  @param driverIP   设备ip
  *  @param driverType 设备类型
@@ -107,14 +107,50 @@
     [self refreshDriverList];
     return YES;
 }
-//移除设备
--(BOOL)removeDriver:(int)driverID
+/**
+ *  //移除设备
+ *
+ *  @param driverID <#driverID description#>
+ *
+ *  @return <#return value description#>
+ */
+-(BOOL)removeDriver:(NSInteger)driverID
 {
-    
+   
+    NSString *plistPath=[mtFileOperations DocumentPath:@"drvierList.plist"];
+    NSMutableDictionary *muDict=[[NSMutableDictionary alloc]initWithContentsOfFile:plistPath];
+    NSMutableArray *tempArray=[muDict objectForKey:@"driver"];
+    [tempArray removeObjectAtIndex:driverID];
+    //插入一条假数据
+    NSMutableDictionary *tempDict=[tempArray objectAtIndex:2];//获取一个数据模型
+    [tempDict setValue:@""   forKey:@"driverName"];
+    [tempDict setValue:@""     forKey:@"driverIP"];
+    [tempArray insertObject:tempDict atIndex:99];//将模型插入到最后一行
+    [muDict setValue:tempArray forKey:@"driver"];
+    [muDict writeToFile:plistPath atomically:YES];
     [self refreshDriverList];
     return YES;
 }
-
+/**
+ *  移动（换位置）
+ *
+ *  @param row   <#row description#>
+ *  @param roRow <#roRow description#>
+ */
+-(void)moveDeviceRowAtIndexPath:(NSInteger)row toIndexPath:(NSInteger)toRow
+{
+    
+    NSString *plistPath=[mtFileOperations DocumentPath:@"drvierList.plist"];
+    NSMutableDictionary *muDict=[[NSMutableDictionary alloc]initWithContentsOfFile:plistPath];
+    NSMutableArray *tempArray=[muDict objectForKey:@"driver"];
+    NSMutableDictionary *tempDict=[tempArray objectAtIndex:row];
+    [tempArray removeObjectAtIndex:row];
+    [tempArray insertObject:tempDict atIndex:toRow];
+    [muDict setValue:tempArray forKey:@"driver"];
+    [muDict writeToFile:plistPath atomically:YES];
+    [self refreshDriverList];
+    
+}
 //由于数据在修改plist之后 缓存数据会发生改变 所以在用户修改数据之后 请调用该方法
 //
 -(void)refreshDriverList

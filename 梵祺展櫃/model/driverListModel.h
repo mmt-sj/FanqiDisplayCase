@@ -20,4 +20,8 @@
 
 -(BOOL)modifyDriver:(NSInteger)deviceID deviceName:(NSString*)name deviceIP:(NSString *)ip;
 
+-(BOOL)removeDriver:(NSInteger)driverID;
+
+-(void)moveDeviceRowAtIndexPath:(NSInteger)row toIndexPath:(NSInteger)toRow;
+
 @end
