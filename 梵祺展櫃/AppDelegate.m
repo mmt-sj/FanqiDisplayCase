@@ -87,17 +87,20 @@
     });
     //开启定时器
     [_timer setFireDate:[NSDate distantPast]];
+
     _count=0;
 }
 -(void)myTimer
 {
     _count++;
     NSLog(@"正在后台运行%ld",(long)_count);
-    if(_count>=40)
+    if(_count>=300)
     {
         //发送停止命令
         [self setDeviceDoorStop];
+        [_timer setFireDate:[NSDate distantFuture]];//停止计时器
     }
+    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -109,7 +112,7 @@
     //回来后
     [_timer setFireDate:[NSDate distantFuture]];//
     
-    NSLog(@"后台运行结束%ld",_count);
+    NSLog(@"后台运行结束%ld",(long)_count);
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

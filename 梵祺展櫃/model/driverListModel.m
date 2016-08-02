@@ -122,9 +122,11 @@
     NSMutableArray *tempArray=[muDict objectForKey:@"driver"];
     [tempArray removeObjectAtIndex:driverID];
     //插入一条假数据
-    NSMutableDictionary *tempDict=[tempArray objectAtIndex:2];//获取一个数据模型
+    NSMutableDictionary *tempDict=[[NSMutableDictionary alloc]init];//获取一个数据模型
     [tempDict setValue:@""   forKey:@"driverName"];
-    [tempDict setValue:@""     forKey:@"driverIP"];
+    [tempDict setValue:@""   forKey:@"driverIP"];
+    [tempDict setValue:@""   forKey:@"driverType"];
+    
     [tempArray insertObject:tempDict atIndex:99];//将模型插入到最后一行
     [muDict setValue:tempArray forKey:@"driver"];
     [muDict writeToFile:plistPath atomically:YES];

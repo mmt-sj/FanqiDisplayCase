@@ -45,6 +45,10 @@
 
 @property(nonatomic,strong)UILabel *lockLabel;
 
+//@property(nonatomic,strong)UIImageView *lockedView;
+//@property(nonatomic,strong)UIImageView *unlockView;
+@property(nonatomic,strong)UIImageView *lockImgeView;
+
 
 
 
@@ -193,7 +197,7 @@
     CGFloat noLabelY=(topViewH-noLabelH)/2-5;
     CGFloat lockSwitchH=30;
     CGFloat lockSwitchX=(SCREENWIDTH-(topViewMarginW*2+lockSwitchW+pickerW+noLabelW))/2;
-    CGFloat lockSwitchY=noLabelY;
+    CGFloat lockSwitchY=noLabelY+10;
     CGFloat noLabelX=lockSwitchW+lockSwitchX+topViewMarginW;
     
     CGFloat pickerH=120;
@@ -203,6 +207,17 @@
     self.lockSwitch=[[UISwitch alloc]initWithFrame:CGRectMake(lockSwitchX, lockSwitchY+2, lockSwitchW, lockSwitchH)];
     self.lockSwitch.transform=CGAffineTransformMakeScale(1.1, 1.1);
     [self.lockSwitch addTarget:self action:@selector(lockSwitch_click) forControlEvents:UIControlEventValueChanged];
+    self.lockSwitch.transform=CGAffineTransformMakeRotation(M_PI/2);
+    
+//    UIImageView *lockedView=[[UIImageView alloc]initWithFrame:CGRectMake(5, 5, 20, 20)];
+//    lockedView.image=[UIImage imageNamed:@"locked"];
+//    //lockedView.transform=CGAffineTransformMakeRotation(-M_PI/2);
+//    //[self.lockSwitch addSubview:lockedView];
+//    [self.lockSwitch.subviews[0] addSubview:lockedView];
+//    
+//    UIImageView *unlockView=[[UIImageView alloc]initWithFrame:CGRectMake(self.lockSwitch.frame.size.width-30, 5, 20, 20)];
+//    unlockView.image=[UIImage imageNamed:@"unlock"];
+//    [self.lockSwitch addSubview:unlockView];
     
     
     //下面的提示
@@ -210,7 +225,7 @@
     self.lockLabel.text=@"locked";
     self.lockLabel.textAlignment=NSTextAlignmentCenter;
     self.lockLabel.font=[UIFont systemFontOfSize:16 weight:5];
-    [topView addSubview:self.lockLabel];
+    //[topView addSubview:self.lockLabel];
     [topView addSubview:self.lockSwitch];
     
  
@@ -307,12 +322,6 @@
                 break;
             }
         }
-     
-  
-
-     
-        
-        
     }];
     self.btnLampA=buttonA;
     [centerView addSubview:self.btnLampA];
@@ -378,8 +387,6 @@
                 break;
             }
         }
-
-        
     }];
     self.btnLampB=buttonB;
     [centerView addSubview:self.btnLampB];
@@ -432,7 +439,6 @@
             }
                 
         }
-
     }];
     self.btnDoorStop=doorStop;
     [bottomView addSubview:self.btnDoorStop];
@@ -443,8 +449,6 @@
     NSString *doorOffTitle=@"關門\r\nclose";
     mtButton *doorOff=[mtButton touchUpOutsideCancelButtonWithType:UIButtonTypeRoundedRect frame:doorOffFrame title:doorOffTitle titleColor:[UIColor whiteColor] backgroundColor:btnColor backgroundImage:nil andBlock:^{
         NSLog(@"關門");
-        
-        
         NSData *sendData=[self sendData:DOOR State:DOORCLOSE];
         for (int i=0; i<10; i++) {
               [self.asyncSocket writeData:sendData withTimeout:1 tag:1];
@@ -454,29 +458,22 @@
             }
         }
       
-
     }];
     self.btnDoorClose=doorOff;
-    
     [bottomView addSubview:self.btnDoorClose];
-    
     UILabel *bj=[[UILabel alloc]init];
     bj.textAlignment=NSTextAlignmentCenter;//设置内容居中显示
     bj.text=@"南京梵祺展櫃有限公司 WS001";
     bj.textColor=[UIColor grayColor];
     bj.font=[UIFont fontWithName:@"Helvetica" size:10];
-    
     CGFloat bjW=SCREENWIDTH;
     CGFloat bjH=15;
     CGFloat bjX=(SCREENWIDTH-bjW)/2;
     CGFloat bjY=SCREENHEIGHT-bjH-10;
     bj.frame=CGRectMake(bjX, bjY, bjW, bjH);
     [self.view addSubview:bj];
-
-    
 //为按钮添加状态点
     {
-       
        // [self addStateViewButton:self.btnLampA stateView:self.LampAstate];
         
         self.LampAstate=[self addStateViewButton:self.btnLampA stateView:self.LampAstate];
@@ -635,8 +632,10 @@
     for (int i=0; i<[data length]; i++) {
         NSLog(@"%hhu",bytes[i]);
     }
-    LAMPASTATE=(int)bytes[4];
-    LAMPBSTATE=(int)bytes[5];
+//    LAMPASTATE=(int)bytes[4];
+//    LAMPBSTATE=(int)bytes[5];
+    LAMPASTATE=(int)bytes[5];
+    LAMPBSTATE=(int)bytes[4];
     DOORSTATE=(int)bytes[6];
    [UIView animateWithDuration:0.2 animations:^{
        if(LAMPASTATE==0)

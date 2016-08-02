@@ -8,8 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#define LAMPA 0x002
-#define LAMPB 0x003
+//#define LAMPA 0x002
+//#define LAMPB 0x003
+#define LAMPA 0x003
+#define LAMPB 0x002
 #define DOOR 0x004
 
 #define LAMPOPEN 1
