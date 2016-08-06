@@ -33,6 +33,7 @@
 @property(nonatomic,strong)UIView *LampAstate;
 @property(nonatomic,strong)mtButton *btnLampB;
 @property(nonatomic,strong)UIView *LampBstate;
+@property(nonatomic,strong)UIView *LampCloseState;
 @property(nonatomic,strong)mtButton *btnLampClose;
 
 @property(nonatomic,strong)mtButton *btnDoorOpen;
@@ -491,8 +492,7 @@
        // [self addStateViewButton:self.btnLampA stateView:self.LampAstate];
         
         self.LampAstate=[self addStateViewButton:self.btnLampA stateView:self.LampAstate];
-     
-        
+        self.LampCloseState=[self addStateViewButton:self.btnLampClose stateView:self.LampCloseState];
         self.LampBstate=[self addStateViewButton:self.btnLampB stateView:self.LampBstate];
         self.doorOpenstate=[self addStateViewButton:self.btnDoorOpen stateView:self.doorOpenstate];
         self.doorStopstate=[self addStateViewButton:self.btnDoorStop stateView:self.doorStopstate];
@@ -562,6 +562,7 @@
     //断开上次连接
     [self cutOffSocket];
     self.LampAstate.backgroundColor=btnColor;
+    self.LampCloseState.backgroundColor=btnColor;
     self.LampBstate.backgroundColor=btnColor;
     self.doorOpenstate.backgroundColor=btnColor;
     self.doorStopstate.backgroundColor=btnColor;
@@ -652,15 +653,22 @@
     LAMPBSTATE=(int)bytes[4];
     DOORSTATE=(int)bytes[6];
    [UIView animateWithDuration:0.2 animations:^{
+       if(LAMPASTATE==0&&LAMPBSTATE==0)
+       {
+           self.LampCloseState.backgroundColor=[UIColor greenColor];
+       }
        if(LAMPASTATE==0)
        {
            self.LampAstate.backgroundColor=btnColor;
+        
            // NSLog(@"设置0");
        }
        else
        {
            self.LampAstate.backgroundColor=[UIColor greenColor];
+           self.LampCloseState.backgroundColor=btnColor;
        }
+       
        if(LAMPBSTATE==0)
        {
            self.LampBstate.backgroundColor=btnColor;
@@ -668,6 +676,7 @@
        else
        {
            self.LampBstate.backgroundColor=[UIColor greenColor];
+           self.LampCloseState.backgroundColor=btnColor;
        }
        if(DOORSTATE==0)
        {

@@ -200,11 +200,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x68b5;&#x797a;&#x5c55;&#x6ac3;/AppDelegate.m"
-            timestampString = "491795311.473633"
+            timestampString = "492158409.454126"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "130"
-            endingLineNumber = "130"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
             landmarkName = "-setDeviceDoorStop"
             landmarkType = "5">
          </BreakpointContent>

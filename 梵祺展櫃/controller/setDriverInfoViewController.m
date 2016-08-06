@@ -151,7 +151,7 @@
     self.ipTextField.userInteractionEnabled=NO;
     self.ipTextField.borderStyle=UITextBorderStyleRoundedRect;
     self.ipTextField.returnKeyType=UIReturnKeyNext;
-    self.ipTextField.keyboardType=UIKeyboardTypeNumberPad;
+   // self.ipTextField.keyboardType=UIKeyboardTypeNumberPad;
     self.ipTextField.leftViewMode=UITextFieldViewModeAlways;
     //self.ipTextField.backgroundColor=[UIColor redColor];
     [self.ipTextField setLeftView:ipLabel];

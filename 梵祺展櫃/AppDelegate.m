@@ -127,6 +127,8 @@
     MTSocketController *mtScoket=[[MTSocketController alloc]init];
      driverListModel *model=[[driverListModel alloc]init];
     NSMutableArray *muArray=[model getDriverListArray];
+    for(int i=0;i<3;i++)
+    {
     for (driverListModel *tempModel in muArray) {
         if(tempModel.driverIP.length>5){
             [mtScoket cutOffSocket];
@@ -134,6 +136,7 @@
             [mtScoket sendData:DOOR State:(DOORSTOP)];
             NSLog(@"stop门的指令已经发送");
         }
+    }
     }
 }
 @end
