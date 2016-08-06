@@ -108,8 +108,8 @@ static MTSocketController *mTSocketController=nil;
     for (int i=0; i<[data length]; i++) {
         NSLog(@"%hhu",bytes[i]);
     }
-    self.LAMPASTATE=(int)bytes[4];
-    self.LAMPBSTATE=(int)bytes[5];
+    self.LAMPASTATE=(int)bytes[5];
+    self.LAMPBSTATE=(int)bytes[4];
      self.DOORSTATE=(int)bytes[6];
     
     NSLog(@"lampAstate:%d,lampBState:%d,DoorState:%d",_LAMPASTATE,_LAMPBSTATE,_DOORSTATE);

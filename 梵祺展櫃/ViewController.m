@@ -48,6 +48,7 @@
 //@property(nonatomic,strong)UIImageView *lockedView;
 //@property(nonatomic,strong)UIImageView *unlockView;
 @property(nonatomic,strong)UIImageView *lockImgeView;
+@property(nonatomic,strong)UIImageView *unlockImgeView;
 
 
 
@@ -189,6 +190,7 @@
     CGFloat lockSwitchW=50;
     CGFloat pickerW=110;
     CGFloat noLabelW=90;
+    CGFloat lockViewW=20;
     
     //锁子
     
@@ -196,7 +198,7 @@
 
     CGFloat noLabelY=(topViewH-noLabelH)/2-5;
     CGFloat lockSwitchH=30;
-    CGFloat lockSwitchX=(SCREENWIDTH-(topViewMarginW*2+lockSwitchW+pickerW+noLabelW))/2;
+    CGFloat lockSwitchX=(SCREENWIDTH-(topViewMarginW*2+lockSwitchW+pickerW+noLabelW+lockViewW))/2+lockViewW;
     CGFloat lockSwitchY=noLabelY+10;
     CGFloat noLabelX=lockSwitchW+lockSwitchX+topViewMarginW;
     
@@ -205,7 +207,7 @@
     CGFloat pickerY=(topViewH-pickerH)/2-5;
     
     self.lockSwitch=[[UISwitch alloc]initWithFrame:CGRectMake(lockSwitchX, lockSwitchY+2, lockSwitchW, lockSwitchH)];
-    self.lockSwitch.transform=CGAffineTransformMakeScale(1.1, 1.1);
+    self.lockSwitch.transform=CGAffineTransformMakeScale(1.2, 1.2);
     [self.lockSwitch addTarget:self action:@selector(lockSwitch_click) forControlEvents:UIControlEventValueChanged];
     self.lockSwitch.transform=CGAffineTransformMakeRotation(M_PI/2);
     
@@ -218,7 +220,19 @@
 //    UIImageView *unlockView=[[UIImageView alloc]initWithFrame:CGRectMake(self.lockSwitch.frame.size.width-30, 5, 20, 20)];
 //    unlockView.image=[UIImage imageNamed:@"unlock"];
 //    [self.lockSwitch addSubview:unlockView];
-    
+    /**
+     锁子图片
+     */
+    self.lockImgeView=[[UIImageView alloc]initWithFrame:CGRectMake((SCREENWIDTH-(topViewMarginW*2+lockSwitchW+pickerW+noLabelW+lockViewW))/2, lockSwitchY-5, 20, 20)];
+    self.lockImgeView.image=[UIImage imageNamed:@"locked"];
+    [topView addSubview:self.lockImgeView];
+    self.unlockImgeView=[[UIImageView alloc]initWithFrame:CGRectMake(self.lockImgeView.frame.origin.x-2, self.lockImgeView.frame.size.height+self.lockImgeView.frame.origin.y+5, 20, 20)];
+    self.unlockImgeView.image=[UIImage imageNamed:@"unlock"];
+    [topView addSubview:self.unlockImgeView];
+    self.unlockImgeView.hidden=YES;
+    /**
+     锁子图片
+     */
     
     //下面的提示
     self.lockLabel=[[UILabel alloc]initWithFrame:CGRectMake(lockSwitchX-2, lockSwitchH+lockSwitchY+5, self.lockSwitch.frame.size.width+2, 20)];
@@ -717,11 +731,14 @@
     if(self.lockSwitch.on)
     {
         self.lockLabel.text=@"Unlock";
+        self.unlockImgeView.hidden=NO;
+        self.lockImgeView.hidden=YES;
         [self setUserInterface:YES];
     }
     else
     {
-        
+        self.lockImgeView.hidden=NO;
+        self.unlockImgeView.hidden=YES;
         self.lockLabel.text=@"Locked";
         [self setUserInterface:NO];
     }
